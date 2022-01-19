@@ -2,7 +2,8 @@
 
 We have a two steam of data and we need to save it in the map:
 
-[image:F249E0F5-014E-4E79-8EB4-FDA408DC2541-3213-00004D8212C79A29/62AA9010-02F4-4759-9681-47EEAB2AA678.png]
+![image](https://user-images.githubusercontent.com/97616185/150170255-c453c761-20c8-4adc-8b57-bea857159646.png)
+
 
 Incoming data:
 userid, message
