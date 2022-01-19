@@ -57,6 +57,7 @@ func main() {
 				log.Println("write:", err)
 				return
 			}
+			log.Println("msg sent")
 		case <-interrupt:
 			log.Println("interrupt")
 

@@ -32,5 +32,5 @@ func NewMapStorage(log comLogger.Logger) *MapStorage {
 
 // Save element in the map
 func (ms *MapStorage) Save(ctx context.Context, number int) error {
-	return fmt.Errorf("something bad has happen")
+	return fmt.Errorf("implement save")
 }

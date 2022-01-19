@@ -148,7 +148,7 @@ func (s *session) writePump() {
 }
 
 func (s *session) readPump() {
-
+	fmt.Println("implement read pump")
 }
 
 func (s *session) handleTextMessage(payload []byte) {
