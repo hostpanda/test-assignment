@@ -30,9 +30,9 @@ func InitHandler(srv *server.HttpServer, app *app.Application) {
 }
 
 func (h *Handler) CreateRecord(ctx echo.Context) error {
-	event := event.Event{}
-	if err := ctx.Bind(&event); err != nil {
-		h.log.Error().Err(err).Interface("ev", event).Msg("cannot process record")
+	e := event.Event{}
+	if err := ctx.Bind(&e); err != nil {
+		h.log.Error().Err(err).Interface("ev", e).Msg("cannot process record")
 		return ctx.String(400, "cannot process request")
 	}
 	fmt.Println("we need to save record")

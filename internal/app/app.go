@@ -31,9 +31,6 @@ func New(repo adapters.Repository) *Application {
 		repo:       repo,
 	}
 
-	// go a.listenHTTP()
-	// go a.listenWS()
-
 	return a
 }
 

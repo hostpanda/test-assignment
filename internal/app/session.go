@@ -82,8 +82,6 @@ func NewSession(ctx context.Context, userID string, conn adapters.Conn, hub sign
 	s.log.Trace().Msg("new session")
 
 	s.hub.AddSession(s)
-	go s.readPump()
-	go s.writePump()
 
 	return s
 }
@@ -150,33 +148,7 @@ func (s *session) writePump() {
 }
 
 func (s *session) readPump() {
-	//defer c.Close()
-	s.conn.SetReadLimit(sessionMaxMessageSize)
-	_ = s.conn.SetReadDeadline(time.Now().Add(sessionPongWait))
 
-	s.conn.SetPongHandler(
-		func(string) error {
-			return s.conn.SetReadDeadline(time.Now().Add(sessionPongWait))
-		},
-	)
-
-	for {
-		t, msg, err := s.conn.ReadMessage()
-		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				s.log.Error().Err(err).Msg("failed to read an incoming message")
-			}
-			break
-		}
-
-		switch t {
-		case websocket.TextMessage:
-			s.handleTextMessage(msg)
-		default:
-			s.log.Error().Err(err).Msg(fmt.Sprintf("unexpected websocket type: %d", t))
-		}
-
-	}
 }
 
 func (s *session) handleTextMessage(payload []byte) {
@@ -184,24 +156,8 @@ func (s *session) handleTextMessage(payload []byte) {
 	var pld ws.Payload
 
 	if err := json.Unmarshal(payload, &pld); err != nil {
-		log.Error().Err(err).Msg("failed to decode message")
+		log.Error().Err(err).Str("payload", string(payload)).Msg("failed to decode message")
 		return
-	}
-
-	switch pld.Event {
-	case ws.SubscribeEvent:
-		// {"event":"subscribe","channels":["test"]}
-		s.rwMu.Lock()
-		for i := range pld.Channels {
-			s.channels[pld.Channels[i]] = null
-		}
-		s.rwMu.Unlock()
-	case ws.UnsubscribeEvent:
-		s.rwMu.Lock()
-		for i := range pld.Channels {
-			delete(s.channels, pld.Channels[i])
-		}
-		s.rwMu.Unlock()
 	}
 
 	return
